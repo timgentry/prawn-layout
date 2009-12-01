@@ -53,6 +53,7 @@ module Prawn
       # <tt>:border_color</tt>:: The color of the cell border.
       # <tt>:font_size</tt>:: The font size for the cell text.
       # <tt>:font_style</tt>:: The font style for the cell text.
+      # <tt>:link_annotation</tt>:: Link annotation options.
       #
       def initialize(options={})
         @point        = options[:point]
@@ -69,6 +70,7 @@ module Prawn
         @align            = options[:align] || :left
         @font_size        = options[:font_size]
         @font_style       = options[:font_style]
+        @link_annotation = options[:link_annotation]
 
         @horizontal_padding = options[:horizontal_padding] || 0
         @vertical_padding   = options[:vertical_padding]   || 0
@@ -81,7 +83,8 @@ module Prawn
 
       attr_accessor :point, :border_style, :border_width, :background_color,
                     :document, :horizontal_padding, :vertical_padding, :align,
-                    :borders, :text_color, :border_color, :font_size, :font_style
+                    :borders, :text_color, :border_color, :font_size, :font_style,
+                    :link_annotation
                     
       attr_writer   :height, :width #:nodoc:   
            
@@ -177,6 +180,11 @@ module Prawn
                                  y - @vertical_padding], 
                                 :width   => text_area_width,
                                 :height  => height - @vertical_padding) do
+          @document.link_annotation(
+            [@document.bounds.absolute_left, @document.bounds.absolute_bottom, @document.bounds.absolute_right, @document.bounds.absolute_top], 
+            @link_annotation
+          ) if @link_annotation
+
           @document.move_down((@document.font.line_gap - @document.font.descender)/2)
 
           options = {:align => @align, :final_gap => false}
